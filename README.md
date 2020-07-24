@@ -12,6 +12,6 @@ blah blah
 
 ### Datasets
 ---
-Data contains two data sources all in JSON format
-- Log data: ''' s3://udacity-dend/log_data '''
-- Song data: ''' s3://udacity-dend/song_data'''
+Data is available in S3 in two data sources all in JSON format:
+- Log data: s3://udacity-dend/log_data
+- Song data: s3://udacity-dend/song_data
