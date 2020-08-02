@@ -3,7 +3,7 @@ A music streaming company, Sparkify, has decided that it is time to introduce mo
 
 ## Apache Airflow
 
-(Airflow)[https://github.com/apache/airflow] is a platform to programmatically author, schedule, and monitor workflows.
+[Airflow](https://github.com/apache/airflow) is a platform to programmatically author, schedule, and monitor workflows.
 
 
 ## Datasets
