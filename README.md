@@ -3,7 +3,7 @@ A music streaming company, Sparkify, has decided that it is time to introduce mo
 
 ## Apache Airflow
 
-blah blah
+Scheduler pipeline developed by AirBnB Team.
 
 
 ## Datasets
