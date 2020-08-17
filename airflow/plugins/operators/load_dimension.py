@@ -10,8 +10,9 @@ class LoadDimensionOperator(BaseOperator):
     def __init__(self,
                  redshift_conn_id = "",
                  sql_insert_query="",
-                 truncate_table=True,
+                 truncate_table="",
                  table="",
+                 append_data="",
                  *args, **kwargs):
 
         super(LoadDimensionOperator, self).__init__(*args, **kwargs)
@@ -24,12 +25,14 @@ class LoadDimensionOperator(BaseOperator):
         self.log.info('LoadDimensionOperator has started')
         
         redshift_hook = PostgresHook(postgres_conn_id=self.redshift_conn_id)
-        if self.truncate_table:
-            self.log.info(f'Truncating Table {self.table}')
-            redshift.run("DELETE FROM {}".format(self.table))
-        self.log.info(f'Running query {self.query}')
-        redshift.run(f"Insert into {self.table} {self.query}")
         
-        self.log.info(f'Success: Loading the dimension table')
-        
+        if self.append_data == True:
+            sql_statement = "INSERT INTO {self.table} {self.query}"
+            redshift.run(sql_statement)
+        else:
+            sql_statement = 'DELETE FROM %s' % self.table_name
+            redshift.run(sql_statement)
+
+            sql_statement = 'INSERT INTO %s %s' % (self.table_name, self.sql_statement)
+            redshift.run(sql_statement)
         
