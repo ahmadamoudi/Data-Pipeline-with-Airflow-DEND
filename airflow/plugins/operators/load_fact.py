@@ -23,4 +23,3 @@ class LoadFactOperator(BaseOperator):
         redshift_hook.run(self.sql_insert_query)
         
         self.log.info(f'Success: Loading the fact table')
-        
