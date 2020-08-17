@@ -10,6 +10,7 @@ class DataQualityOperator(BaseOperator):
     def __init__(self,
                  redshift_conn_id="",
                  tables=[],
+                 test_query=None,
                  *args, **kwargs):
 
         super(DataQualityOperator, self).__init__(*args, **kwargs)
@@ -29,4 +30,12 @@ class DataQualityOperator(BaseOperator):
             """)
         else:
             self.log.info("Data quality check passed.")
+        
+        for check in self.test_query:
+            sql = check.get('check_sql')
+            exp_result = check.get('expected_result')
+            records = redshift.get_records(sql)[0]
+            if exp_result != records[0]:
+                error_count += 1
+                failing_tests.append(sql)
         
