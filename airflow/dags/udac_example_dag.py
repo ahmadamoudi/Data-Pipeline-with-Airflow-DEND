@@ -12,7 +12,7 @@ from helpers import SqlQueries
 default_args = {
     'owner': 'ahmad',
     'start_date': datetime(2020, 8, 14),
-    'email': ['ahmad****@outlook.com'],
+    'email': ['ahmad.****@outlook.com'],
     'depends_on_past': False ,
     'retries': 3 ,
     'retry_delay': timedelta(minutes=5) ,
@@ -64,7 +64,8 @@ load_user_dimension_table = LoadDimensionOperator(
     dag=dag,
     table="[public].users",
     redshift_conn_id="redshift",
-    sql_insert_query=SqlQueries.user_table_insert
+    sql_insert_query=SqlQueries.user_table_insert,
+    append_data=False
 )
 
 load_song_dimension_table = LoadDimensionOperator(
@@ -96,7 +97,13 @@ run_quality_checks = DataQualityOperator(
     dag=dag,
     redshift_conn_id="redshift",
     table=["songplays", "users", "songs", "artists", "time"],
-    test_query='SELECT COUNT(*) FROM songs WHERE songid is null;',
+    test_query=[
+{'check_sql': "SELECT COUNT() FROM users WHERE userid is null", 'expected_result': 0},
+{'check_sql': "SELECT COUNT() FROM songs WHERE song_id is null", 'expected_result': 0},
+{'check_sql': "SELECT COUNT() FROM songplays WHERE songplay_id is null", 'expected_result': 0},
+{'check_sql': "SELECT COUNT() FROM artists WHERE artist_id is null", 'expected_result': 0},
+{'check_sql': "SELECT COUNT() FROM time WHERE start_time is null", 'expected_result': 0}
+],
     expected_result=0
 )
 
